@@ -31,19 +31,20 @@ class MainWindow():
         top.config(background=YELLOW)
         top.title("Testing")
         self.main.eval(f'tk::PlaceWindow {str(top)} center')
-        Label(top, text="Type text:", background=YELLOW, padx=50).grid(row=0, column=1)
+        top_text = Label(top, text="Type text:", background=YELLOW, padx=50)
+        top_text.grid(row=0, column=1)
         text = Label(top, pady=30, width=20, background=YELLOW)
         text.grid(row=1, column=1)
         
         current = Label(top, pady=10, background=YELLOW)
         current.grid(row=2, column=1)
         self.generate_text()
-        self.listen_keys(text, current, top)
+        self.listen_keys(text, current, top, top_text)
         
 
         
 
-    def listen_keys(self, text, current, top):
+    def listen_keys(self, text, current, top, top_text):
         self.l = 0
         self.r = 20
         self.r = self.change_text(text, current, self.l, self.r)
@@ -59,10 +60,11 @@ class MainWindow():
                     
                     temp_time = datetime.datetime.now()
                     end_time = temp_time.minute*60 + temp_time.second
+                    top_text.config(text='Results:')
                     diff = end_time-self.start_time
                     text.config(text=f'{diff//60} minutes, {diff%60} seconds.')
                     wpm = round(((self.text.count(' ')+1)/diff)*60, 2)
-                    sps = len(self.text)//(diff%60)
+                    sps = len(self.text)//(diff)
                     current.config(text=f'{wpm} words per minute.\n {sps} symbols per second.')
                     
                     exit_btn = Button(top, text='Exit', command=top.destroy)
